@@ -11,7 +11,8 @@ export interface IUser extends Document {
   name: string;
   email: string;
   password: string;
-  comparePassword: (password:string)=> Promise<boolean>
+  role: string;
+  comparePassword: (password: string) => Promise<boolean>;
 }
 
 const userSchema = new Schema(
@@ -42,6 +43,14 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    role: {
+      type: String,
+      required: true,
+      enum: {
+        values: ["admin", "basic", "cashier"],
+        message: "Invalid rol",
+      },
+    },
   },
   {
     timestamps: true,
@@ -54,7 +63,7 @@ userSchema.pre("save", async function (next) {
   if (!user.isModified("password")) {
     return next();
   }
-  
+
   if (!passwordRegex.test(user.password)) {
     return next(
       new ErrroResponse(
@@ -69,8 +78,10 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
-userSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
-    return await bcrypt.compare(password, this.password)
-}
+userSchema.methods.comparePassword = async function (
+  password: string
+): Promise<boolean> {
+  return await bcrypt.compare(password, this.password);
+};
 
 export default model<IUser>("User", userSchema); // funciones genericas

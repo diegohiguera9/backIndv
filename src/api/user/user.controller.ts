@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 
 
 function createToken (user: IUser) {
-    return jwt.sign({ id: user._id }, process.env.SECRET_KEY as string, {
+    return jwt.sign({ id: user._id, role: user.role }, process.env.SECRET_KEY as string, {
         expiresIn: 60 * 60 * 24,
       });
 }

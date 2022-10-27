@@ -4,6 +4,7 @@ import { Request, Response, NextFunction } from 'express'
 
 export interface UserPayload {
   id: string;
+  role: string;
 }
 
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
@@ -23,7 +24,8 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     const decoded = jwt.verify(token, process.env.SECRET_KEY as string) as UserPayload;
     // (req as CustomRequest).token = decoded;
 
-    req.body.userId = decoded.id   
+    req.body.userId = decoded.id
+    req.body.userRole = decoded.role   
 
     next();
   } catch (err) {
