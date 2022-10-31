@@ -26,7 +26,7 @@ export async function tokenOauth (req: Request, res:Response, next:NextFunction)
     try{
         const user:any = req.user
         const token = createToken(user)
-        res.status(200).json({token}).redirect('https://frontfogon.vercel.app/login/success')
+        res.redirect('https://frontfogon.vercel.app/login/success')
     } catch(err){
         next(err)
     }
