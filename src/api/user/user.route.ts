@@ -14,8 +14,8 @@ router.route('/login/google').get(passport.authenticate('google',{scope:['profil
 
 router.route('/auth/google/callback').get(passport.authenticate('google', {
     failureMessage:'Cannot login to this page',
-    failureRedirect: 'https://frontfogon-dxx7qsmma-diegohiguera9.vercel.app/',
-    successRedirect: 'https://frontfogon-dxx7qsmma-diegohiguera9.vercel.app//login/success',
+    failureRedirect: 'https://frontfogon.vercel.app',
+    successRedirect: 'https://frontfogon.vercel.app/login/success',
     session: true,
 }),
 (req,res)=>{
