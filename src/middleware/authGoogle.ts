@@ -27,12 +27,10 @@ passport.use(new GoogleStrategy({
 
     if(!user){
         const user2: IUser = await User.create(defaultUser)
-        req.body.user = user2
         return cb(null, user2)
     }
 
     if(user){
-        req.body.user = user
         return cb(null,user)
     }
 
