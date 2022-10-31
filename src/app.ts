@@ -17,7 +17,7 @@ import './middleware/authGoogle'
 
 //middleware
 app.use(morgan("tiny"));
-app.use(cors({origin:'http://localhost:3000', credentials:true}));
+app.use(cors({origin:'https://frontfogon-dxx7qsmma-diegohiguera9.vercel.app/', credentials:true}));
 app.set("trust proxy", 1);
 app.use(express.json());
 app.use(
