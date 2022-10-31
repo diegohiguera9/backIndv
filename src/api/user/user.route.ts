@@ -24,6 +24,6 @@ router.route('/auth/google/callback').get(passport.authenticate('google', {
 }
 )
 
-router.route('/token').get(googleAuth,tokenOauth)
+router.route('/token').get(passport.authenticate('google',{scope:['profile','email']}), googleAuth, tokenOauth)
 
 export default router
