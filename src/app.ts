@@ -20,8 +20,8 @@ app.use(morgan("tiny"));
 app.use(
   cors({
     origin: [
-      "https://frontfogon-dxx7qsmma-diegohiguera9.vercel.app/",
-      'https://frontfogon.vercel.app/',
+      "https://frontfogon-dxx7qsmma-diegohiguera9.vercel.app",
+      'https://frontfogon.vercel.app',
       "http://localhost:3000",
       '186.28.25.144'
     ],
