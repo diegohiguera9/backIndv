@@ -14,8 +14,8 @@ router.route('/login/google').get(passport.authenticate('google',{scope:['profil
 
 router.route('/auth/google/callback').get(passport.authenticate('google', {
     failureMessage:'Cannot login to this page',
-    failureRedirect: 'https://frontfogon.vercel.app',
-    successRedirect: 'https://frontfogon.vercel.app/login/success',
+    failureRedirect: 'https://diegohtop24.herokuapp.com/user/token',
+    successRedirect: '/token',
     session: true,
 }),
 (req,res)=>{
@@ -24,6 +24,6 @@ router.route('/auth/google/callback').get(passport.authenticate('google', {
 }
 )
 
-router.route('/token').get(passport.authenticate('google',{scope:['profile','email']}), googleAuth, tokenOauth)
+router.route('/token').get(googleAuth, tokenOauth)
 
 export default router
