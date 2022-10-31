@@ -8,7 +8,10 @@ export async function adminAuth(
   next: NextFunction
 ) {
   try {
-    if (req.body.userRole !== "admin")
+    if (!req.user){
+      return next()
+    }
+    if (req.body.user.role !== "admin")
       return next(new ErrroResponse("User no authorized", 404));
     next()
   } catch (err) {

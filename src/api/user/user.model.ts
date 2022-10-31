@@ -7,12 +7,14 @@ const passwordRegex = new RegExp(
   /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,14}$/
 );
 
-export interface IUser extends Document {
+export interface IUser {
   name: string;
   email: string;
-  password: string;
+  password?: string;
   role: string;
-  comparePassword: (password: string) => Promise<boolean>;
+  googleId?:string;
+  __v?: number;
+  _id?: string;
 }
 
 const userSchema = new Schema(
@@ -41,7 +43,6 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
     },
     role: {
       type: String,
@@ -64,6 +65,10 @@ userSchema.pre("save", async function (next) {
     return next();
   }
 
+  if (!user.password) {
+    return next()
+  }
+
   if (!passwordRegex.test(user.password)) {
     return next(
       new ErrroResponse(
@@ -78,10 +83,5 @@ userSchema.pre("save", async function (next) {
   return next();
 });
 
-userSchema.methods.comparePassword = async function (
-  password: string
-): Promise<boolean> {
-  return await bcrypt.compare(password, this.password);
-};
 
 export default model<IUser>("User", userSchema); // funciones genericas

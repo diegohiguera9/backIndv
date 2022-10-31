@@ -1,13 +1,14 @@
 import jwt, {JwtPayload} from 'jsonwebtoken'
 import ErrroResponse from '../utils/errorResponse';
 import { Request, Response, NextFunction } from 'express'
+import User, { IUser } from '../api/user/user.model';
 
 export interface UserPayload {
   id: string;
   role: string;
 }
 
-export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+export const isAuthenticated = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { authorization } = req.headers;
 
@@ -26,6 +27,9 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
 
     req.body.userId = decoded.id
     req.body.userRole = decoded.role   
+
+    const user: IUser | null = await User.findById(decoded.id)
+    req.body.user = user
 
     next();
   } catch (err) {

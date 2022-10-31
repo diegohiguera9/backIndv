@@ -2,6 +2,7 @@ import User, {IUser} from './user.model'
 import { Request, Response, NextFunction } from 'express'
 import ErrroResponse from '../../utils/errorResponse'
 import jwt from 'jsonwebtoken'
+import bcrypt from 'bcrypt'
 
 
 function createToken (user: IUser) {
@@ -12,10 +13,21 @@ function createToken (user: IUser) {
 
 export async function signUp (req: Request, res:Response, next:NextFunction) {
     try{
+        if(!req.body.password) return next(new ErrroResponse('Password required',400))
         const user: IUser =  await User.create(req.body)
         const token = createToken(user)
         res.status(200).json({token})
     } catch (err){
+        next(err)
+    }
+}
+
+export async function tokenOauth (req: Request, res:Response, next:NextFunction) {
+    try{
+        const user:any = req.user
+        const token = createToken(user)
+        res.status(200).json({token})
+    } catch(err){
         next(err)
     }
 }
@@ -28,7 +40,11 @@ export async function singIn (req: Request, res: Response, next: NextFunction) {
             return next(new ErrroResponse('No user found',400))
         }
 
-        const isValid: boolean = await user.comparePassword(req.body.password)
+        if(!user.password) {
+            return next(new ErrroResponse('No password detected',400))
+        }
+
+        const isValid: boolean = await bcrypt.compare(req.body.password, user.password)
 
         if (!isValid) {
             return next(new ErrroResponse('No valid password',400))
