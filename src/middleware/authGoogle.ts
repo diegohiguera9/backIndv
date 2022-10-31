@@ -4,7 +4,7 @@ import User, { IUser } from "../api/user/user.model";
 
 const GoogleStrategy = strategy.Strategy
 
-const GOOGLE_CALLBACK = '/auth/google/callback'
+const GOOGLE_CALLBACK = 'https://diegohtop24.herokuapp.com/user/auth/google/callback'
 
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_ID || ' ',
