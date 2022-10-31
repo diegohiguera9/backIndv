@@ -40,6 +40,7 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.authenticate('session'));
 
 //middleware routes
 app.use("/user", userRouter);
