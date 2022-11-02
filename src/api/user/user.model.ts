@@ -7,7 +7,7 @@ const passwordRegex = new RegExp(
   /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{6,14}$/
 );
 
-export interface IUser {
+export interface IUser extends Document {
   name: string;
   email: string;
   password?: string;

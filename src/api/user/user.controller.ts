@@ -60,9 +60,38 @@ export async function singIn (req: Request, res: Response, next: NextFunction) {
 
 export async function show (req: Request, res: Response, next: NextFunction) {
     try {
-        console.log(req.body)
-        res.status(200).json({message:'ok'})
+        const users = await User.find()
+        res.status(200).json({data:users})
     } catch(err) {
+        next(err)
+    }
+}
 
+export async function update (req: Request, res: Response, next: NextFunction) {
+    try{
+        const user: IUser | null = await User.findOne({email:req.body.email})
+
+        if (!user){
+            return next(new ErrroResponse('No User found',400))
+        }
+
+        const updateUser = await User.findByIdAndUpdate(user._id, req.body, {new:true})
+
+        res.status(200).json({data:updateUser})
+
+    } catch(err){
+        next(err)
+    }
+}
+
+export async function showOne (req: Request, res: Response, next: NextFunction) {
+    try{
+        const user = await User.findOne({email:req.body.email})
+        if (!user){
+            return next(new ErrroResponse('no user found',400))
+        }
+        res.status(200).json({data:user})
+    } catch(err){
+        next(err)
     }
 }

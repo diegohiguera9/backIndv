@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { signUp, singIn,show, tokenOauth } from "./user.controller";
+import { signUp, singIn,show, tokenOauth, update, showOne } from "./user.controller";
 import { isAuthenticated } from "../../middleware/auth";
+import { adminAuth } from "../../middleware/roleAuth";
 import passport from "passport";
 import googleAuth from "../../middleware/reqGoogle";
 
@@ -8,7 +9,9 @@ const router = Router()
 
 router.route("/signup").post(signUp)
 router.route('/signin').post(singIn)
-router.route('/show').get(isAuthenticated,show)
+router.route('/show').get(isAuthenticated,adminAuth,show)
+router.route('/showOne').post(isAuthenticated,adminAuth,showOne)
+router.route('/update').post(update)
 
 router.route('/login/google').get(passport.authenticate('google',{scope:['profile','email']}))
 

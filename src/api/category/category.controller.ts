@@ -34,3 +34,24 @@ export async function destroyCategory (req: Request, res:Response, next:NextFunc
         next(err)
     }
 }
+
+export async function showCategorys (req: Request, res:Response, next:NextFunction) {
+    try{
+        const categories = await Category.find()
+        res.status(200).json({data:categories})
+    } catch (err){
+        next(err)
+    }
+}
+
+export async function showCategory (req: Request, res:Response, next:NextFunction) {
+    try{
+        const category = await Category.findById(req.params.id)
+        if(!category){
+            return next(new ErrroResponse('No category found',400))
+        }
+        res.status(200).json({data:category})
+    } catch (err){
+        next(err)
+    }
+}

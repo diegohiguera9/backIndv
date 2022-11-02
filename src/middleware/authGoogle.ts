@@ -17,16 +17,14 @@ passport.use(new GoogleStrategy({
         return 
     }
 
-    const defaultUser:IUser = {
-        name: `${profile.name?.givenName}`,
-        email: profile.emails[0].value, 
-        role:'basic'
-    }
-
-    const user: IUser | null = await User.findOne({email:defaultUser.email})
+    const user: IUser | null = await User.findOne({email:profile.emails[0].value})
 
     if(!user){
-        const user2: IUser = await User.create(defaultUser)
+        const user2: IUser = await User.create({
+            name: `${profile.name?.givenName}`,
+            email: profile.emails[0].value, 
+            role:'basic'
+        })
         return cb(null, user2)
     }
 
