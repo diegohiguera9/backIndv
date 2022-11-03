@@ -5,6 +5,7 @@ export interface ITable extends Document {
   number: number;
   floor: number;
   order: string;
+  type:string;
 }
 
 const tableSchema = new Schema(
@@ -20,7 +21,15 @@ const tableSchema = new Schema(
     order:{
         type: String, 
         required: false
-    }
+    },
+    type: {
+        type: String,
+        required: true,
+        enum: {
+          values: ["restaurant", "togo", "delivery",'pickup'],
+          message: "Invalid type",
+        },
+      },    
   },
   { timestamps: true }
 );
