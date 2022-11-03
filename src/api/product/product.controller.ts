@@ -10,7 +10,9 @@ export async function createProduct(
 ) {
   try {
     const data = req.body;
-    const category: ICategory | null = await Category.findOne({name:data.category});
+    const category: ICategory | null = await Category.findOne({
+      name: data.category,
+    });
     if (!category) {
       return next(new ErrroResponse("No category found", 400));
     }
@@ -18,7 +20,7 @@ export async function createProduct(
       name: data.name,
       categoryId: category._id,
       price: data.price,
-      image: data.images
+      image: data.images,
     };
     const product: IProduct = await Product.create(newProduct);
     category.products.push(product._id);
@@ -29,18 +31,18 @@ export async function createProduct(
   }
 }
 
-export async function showProducts (
+export async function showProducts(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
     const products = await Product.find().populate({
-      path:'categoryId'
-    })
-    res.status(200).json({data:products})
-  } catch(err){
-    next(err)
+      path: "categoryId",
+    });
+    res.status(200).json({ data: products });
+  } catch (err) {
+    next(err);
   }
 }
 
@@ -50,7 +52,7 @@ export async function updateProduct(
   next: NextFunction
 ) {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const productId = req.params.id;
     const product = await Product.findByIdAndUpdate(productId, req.body, {
       new: true,
@@ -58,10 +60,13 @@ export async function updateProduct(
     if (!product) {
       return next(new ErrroResponse("No product found", 400));
     }
-    if (req.body.images.length > 0){
-      product.image = req.body.images
-      product.save({validateBeforeSave:false})
+    if (req.body.images) {
+      if (req.body.images.length > 0) {
+        product.image = req.body.images;
+        product.save({ validateBeforeSave: false });
+      }
     }
+
     res.status(200).json({ data: product });
   } catch (err) {
     next(err);
@@ -93,9 +98,9 @@ export async function destroyProduct(
       (item) => item.toString() !== productId
     );
 
-    category.products = newProducts
+    category.products = newProducts;
 
-    await category.save({validateBeforeSave:false})
+    await category.save({ validateBeforeSave: false });
 
     await Product.findByIdAndDelete(productId);
 
@@ -105,21 +110,23 @@ export async function destroyProduct(
   }
 }
 
-export async function showProduct (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ) {
-    try{
-        const productId = req.params.id
-        const product: IProduct | null = await Product.findById(productId).populate({
-          path:'categoryId'
-        })
-        if (!product) {
-            return next(new ErrroResponse('No product found',400))
-        }
-        res.status(200).json({data:product})    
-    } catch (err){
-        next(err)
+export async function showProduct(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const productId = req.params.id;
+    const product: IProduct | null = await Product.findById(productId).populate(
+      {
+        path: "categoryId",
+      }
+    );
+    if (!product) {
+      return next(new ErrroResponse("No product found", 400));
     }
+    res.status(200).json({ data: product });
+  } catch (err) {
+    next(err);
   }
+}
