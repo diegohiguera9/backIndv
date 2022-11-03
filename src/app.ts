@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
@@ -10,10 +11,10 @@ import productRouter from "./api/product/product.router";
 import errorHandler from "./middleware/errorHandler";
 
 //initialize
-dotenv.config();
 const app = express();
 
 import "./middleware/authGoogle";
+import './utils/formData'
 
 //middleware
 app.use(morgan("tiny"));

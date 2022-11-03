@@ -10,13 +10,15 @@ export async function createProduct(
 ) {
   try {
     const data = req.body;
-    const category: ICategory | null = await Category.findOne(data.category);
+    const category: ICategory | null = await Category.findOne({name:data.category});
     if (!category) {
       return next(new ErrroResponse("No category found", 400));
     }
     const newProduct = {
       name: data.name,
       categoryId: category._id,
+      price: data.price,
+      image: data.images
     };
     const product: IProduct = await Product.create(newProduct);
     category.products.push(product._id);
@@ -27,18 +29,38 @@ export async function createProduct(
   }
 }
 
+export async function showProducts (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const products = await Product.find().populate({
+      path:'categoryId'
+    })
+    res.status(200).json({data:products})
+  } catch(err){
+    next(err)
+  }
+}
+
 export async function updateProduct(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
+    console.log(req.body)
     const productId = req.params.id;
     const product = await Product.findByIdAndUpdate(productId, req.body, {
       new: true,
     });
     if (!product) {
       return next(new ErrroResponse("No product found", 400));
+    }
+    if (req.body.images.length > 0){
+      product.image = req.body.images
+      product.save({validateBeforeSave:false})
     }
     res.status(200).json({ data: product });
   } catch (err) {
@@ -90,7 +112,9 @@ export async function showProduct (
   ) {
     try{
         const productId = req.params.id
-        const product: IProduct | null = await Product.findById(productId)
+        const product: IProduct | null = await Product.findById(productId).populate({
+          path:'categoryId'
+        })
         if (!product) {
             return next(new ErrroResponse('No product found',400))
         }
