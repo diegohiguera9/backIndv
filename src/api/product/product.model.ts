@@ -6,6 +6,9 @@ export interface IProduct extends Document {
   categoryId: ICategory["_id"];
   price: number;
   image: Array<string>;
+  con?: string;
+  sin?: string;
+  obs?: string;
 }
 
 const productSchema = new Schema(
@@ -39,6 +42,15 @@ const productSchema = new Schema(
     price :{
       type: Number, 
       required:true
+    },
+    con: {
+      type: String,       
+    },
+    sin: {
+      type: String,
+    }, 
+    obs: {
+      type: String
     }
   },
   {

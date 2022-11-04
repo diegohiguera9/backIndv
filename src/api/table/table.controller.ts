@@ -78,3 +78,37 @@ export async function destroyTable (
         next(err)
     }
 }
+
+export async function showType (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try{
+        const queryType = req.query.type
+        const floorType = req.query.floor
+        const tables = await Table.find({type:queryType, floor:floorType})
+        res.status(200).json({data:tables})
+    } catch(err){
+        next(err)
+    }
+  }
+
+  export async function showNumber(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try{
+        const tableNum = req.params.id
+        const table = await Table.findOne({number:tableNum}).populate({
+            path: 'order'
+        })
+        if(!table){
+            return next(new ErrroResponse('no tables found',400))
+        }
+        res.status(200).json({data:table})
+    } catch(err){
+        next(err)
+    }
+  }
