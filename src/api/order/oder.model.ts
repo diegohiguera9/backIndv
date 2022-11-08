@@ -1,25 +1,54 @@
-import {Schema, Document, model} from 'mongoose'
-import { IProduct } from '../product/product.model'
-import { ITable } from '../table/table.model'
+import { Schema, Document, model, Types } from "mongoose";
+import { IProduct } from "../product/product.model";
+import { ITable } from "../table/table.model";
 
-export interface IOrder extends Document {
-    products: Array<IProduct['_id']>;
-    table: ITable['_id'];
+export interface oderProducts {
+  product: IProduct["_id"];
+  name: string;
+  count: number;
+  price: number;
+  totalPrice: number;
 }
 
-const orderSchema = new Schema({
+export interface IOrder extends Document {
+  products: Array<oderProducts>;
+  table: ITable["_id"];
+  total: number;
+}
+
+const orderSchema = new Schema(
+  {
     products: {
-        type: [{type: Schema.Types.ObjectId, ref:'Product'}],
-        required:true
-    }, 
+      type: [
+        {
+          product: { type: Schema.Types.ObjectId, ref: "Product" },
+          count: {
+            type: Number, 
+            min: 0
+          },
+          price: Number,
+          name: String,
+          totalPrice:Number,
+        },
+      ],
+      required: true,
+    },
     table: {
-        type: Schema.Types.ObjectId,
-        ref: 'Table'
+      type: Schema.Types.ObjectId,
+      ref: "Table",
     },
     location: {
-        type: Object
+      type: Object,
+    },
+    total: {
+        type: Number
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
-},{timestamps:true})
+  },
+  { timestamps: true }
+);
 
-export default model <IOrder>('Order',orderSchema)
-
+export default model<IOrder>("Order", orderSchema);

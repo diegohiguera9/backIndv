@@ -1,6 +1,7 @@
 import { model, Schema, Document, models } from "mongoose";
 import ErrroResponse from "../../utils/errorResponse";
 import bcrypt from "bcrypt";
+import { IOrder } from "../order/oder.model";
 
 const emailRegex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
 const passwordRegex = new RegExp(
@@ -13,6 +14,7 @@ export interface IUser extends Document {
   password?: string;
   role: string;
   googleId?:string;
+  orders: Array<IOrder['_id']>;
   __v?: number;
   _id?: string;
 }
@@ -52,6 +54,9 @@ const userSchema = new Schema(
         message: "Invalid rol",
       },
     },
+    orders: {
+      type: [{type: Schema.Types.ObjectId, ref:'Order'}]
+    }
   },
   {
     timestamps: true,

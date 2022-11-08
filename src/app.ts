@@ -10,6 +10,7 @@ import categoryRouter from "./api/category/category.router";
 import productRouter from "./api/product/product.router";
 import errorHandler from "./middleware/errorHandler";
 import tableRouter from "./api/table/table.router";
+import oderRouter from "./api/order/order.route";
 
 //initialize
 const app = express();
@@ -50,6 +51,7 @@ app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/product", productRouter);
 app.use('/table', tableRouter)
+app.use('/order', oderRouter)
 app.get("/logout", function (req, res, next) {
   req.logout(function (err) {
     if (err) {
