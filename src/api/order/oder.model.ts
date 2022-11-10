@@ -14,6 +14,7 @@ export interface IOrder extends Document {
   products: Array<oderProducts>;
   table: ITable["_id"];
   total: number;
+  status:string;
 }
 
 const orderSchema = new Schema(
@@ -46,7 +47,21 @@ const orderSchema = new Schema(
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    }
+    },
+    kitchen: {
+      type: String,
+      enum: {
+        values: ["preparacion", "entregada"],
+        message: "Invalid kitchen",
+      },
+    },
+    status: {
+      type: String,
+      enum: {
+        values: ["pendiente", "pagada"],
+        message: "Invalid status",
+      },
+    },
   },
   { timestamps: true }
 );

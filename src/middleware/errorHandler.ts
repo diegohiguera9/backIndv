@@ -5,6 +5,7 @@ const errorHandler = (err: any, req: Request, res: Response,next: NextFunction) 
   let error = { ...err };
 
   error.message = err.message;
+  console.log(err)
 
   if (err.name === "ValidationError") {
     const message: any = Object.values(err.errors).map((val:any) => val.message);
