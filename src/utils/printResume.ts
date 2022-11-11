@@ -2,14 +2,12 @@ import { printer, types } from "node-thermal-printer";
 import { Request, Response, NextFunction } from "express";
 import { oderProducts } from "../api/order/oder.model";
 
-export async function ipPrinter(
+export async function ipPrinterResume(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-
-  const products = req.body.data  
-  const table = req.body.table
+  const order = req.body.data;
 
   let impresora = new printer({
     type: types.EPSON, // Printer type: 'star' or 'epson'
@@ -24,22 +22,28 @@ export async function ipPrinter(
   });
 
   async function imprimir() {
-      
-    impresora.setTextDoubleHeight()
+    impresora.setTextDoubleHeight();
     impresora.setTextDoubleWidth();
-    impresora.bold(true);  
-    impresora.print(`Mesa ${table}\n`)
-    impresora.print('Adicion Productos\n')
-    impresora.print('\n')
-    impresora.setTextNormal();  
-    impresora.drawLine(); 
-    impresora.setTextDoubleHeight()
+    impresora.bold(true);
+    impresora.print(`Mesa ${order.table.number}\n`);
+    impresora.print("\n");
+    impresora.setTextNormal();
+    impresora.drawLine();
+    order.products.forEach((item: oderProducts) => {
+      impresora.newLine();
+      impresora.leftRight(
+        item.name + ":    " + item.count + " ",
+        `$ ${new Intl.NumberFormat("de-DE").format(item.totalPrice)}`
+      );
+      impresora.newLine();
+    });
+    impresora.newLine();
+    impresora.bold(true);
+    impresora.setTextDoubleHeight();
     impresora.setTextDoubleWidth();
-    products.forEach((item:oderProducts)=>{
-      impresora.print(item.name+':    '+ item.count)
-      impresora.newLine(); 
-      impresora.newLine();   
-    })
+    impresora.print(
+      `TOTAL: $ ${new Intl.NumberFormat("de-DE").format(order.total)}`
+    );
     impresora.openCashDrawer();
     impresora.cut();
     await impresora.execute();

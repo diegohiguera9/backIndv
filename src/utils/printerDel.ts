@@ -2,7 +2,7 @@ import { printer, types } from "node-thermal-printer";
 import { Request, Response, NextFunction } from "express";
 import { oderProducts } from "../api/order/oder.model";
 
-export async function ipPrinter(
+export async function ipPrinterDel(
   req: Request,
   res: Response,
   next: NextFunction
@@ -29,7 +29,7 @@ export async function ipPrinter(
     impresora.setTextDoubleWidth();
     impresora.bold(true);  
     impresora.print(`Mesa ${table}\n`)
-    impresora.print('Adicion Productos\n')
+    impresora.print('Eliminacion Productos\n')
     impresora.print('\n')
     impresora.setTextNormal();  
     impresora.drawLine(); 

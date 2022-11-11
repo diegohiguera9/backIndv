@@ -14,7 +14,8 @@ export interface IOrder extends Document {
   products: Array<oderProducts>;
   table: ITable["_id"];
   total: number;
-  status:string;
+  status:string;  
+  updatedAt: string;
 }
 
 const orderSchema = new Schema(
