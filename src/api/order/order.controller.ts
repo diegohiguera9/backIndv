@@ -25,6 +25,7 @@ export async function createOrder(
       total: 0,
       user: userId._id,
       status: data.status,
+      location: data.location?{...data.location}:{}
     });
 
     order.products.forEach((item) => {
@@ -233,14 +234,12 @@ export async function orderDay(
   next: NextFunction
 ) {
   try {
-    let query = req.query.day;
-    let date = 1;
-
-    if (query) {
-      date = parseFloat(query as string);
-    }
+    const status = req.query.status
+    let date = [new Date(req.body.date), new Date(req.body.date)];
+    date[1] = new Date(date[1].getTime() + 60 * 60 * 24 * 1000)
+    console.log(date);
     let updateDay = {
-      $dayOfMonth: {
+      $dateToString: {
         date: "$updatedAt",
         timezone: "-05",
       },
@@ -248,7 +247,11 @@ export async function orderDay(
 
     const orders = await Order.find({
       $expr: {
-        $and: [{ $eq: [date, updateDay] }, { $eq: ["pagada", "$status"] }],
+        $and: [
+          { $lte: [date[0], { $dateFromString: { dateString: updateDay } }] },
+          { $gte: [date[1], { $dateFromString: { dateString: updateDay } }] },
+          { $eq: [status, "$status"] },
+        ],        
       },
     }).sort({
       'updatedAt':-1
@@ -314,7 +317,6 @@ export async function printResume(
   next: NextFunction
 ){
   try{
-    console.log('in controller')
     const orderId = req.params.id
     const order = await Order.findById(orderId)
     .populate({
@@ -326,11 +328,54 @@ export async function printResume(
     if(!order){
       return next(new ErrroResponse('No order found',400))
     }
-    console.log('out controller')
     req.body.data = order
     res.sendStatus(200)
     next()
   } catch(err){
     next()
+  }
+}
+
+export async function orderMap (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const status = req.query.status
+    let date = [new Date(req.body.date), new Date(req.body.date)];
+    date[1] = new Date(date[1].getTime() + 60 * 60 * 24 * 1000)
+    console.log(date);
+    let updateDay = {
+      $dateToString: {
+        date: "$updatedAt",
+        timezone: "-05",
+      },
+    };
+
+    const orders = await Order.find({
+      $expr: {
+        $and: [
+          { $lte: [date[0], { $dateFromString: { dateString: updateDay } }] },
+          { $gte: [date[1], { $dateFromString: { dateString: updateDay } }] },
+          { $eq: [status, "$status"] },
+        ],        
+      },
+    }).sort({
+      'updatedAt':1
+    })
+      .populate({
+        path: "table",
+        match:{type:{$eq:'delivery'}}
+      })
+      .populate({
+        path: "user",
+      });
+
+      const newOrders = orders.filter(item=>item.table)
+
+    res.status(200).json({ data: newOrders });
+  } catch(err){
+
   }
 }

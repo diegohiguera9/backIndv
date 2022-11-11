@@ -26,6 +26,12 @@ export async function ipPrinterResume(
     impresora.setTextDoubleWidth();
     impresora.bold(true);
     impresora.print(`Mesa ${order.table.number}\n`);
+    if (order.location){
+        if (order.location.address){
+            impresora.print("\n");
+            impresora.print(order.location.address)
+        }
+    }
     impresora.print("\n");
     impresora.setTextNormal();
     impresora.drawLine();

@@ -40,7 +40,10 @@ const orderSchema = new Schema(
       ref: "Table",
     },
     location: {
-      type: Object,
+      type: {
+        coordinates: Object,
+        address: String
+      },
     },
     total: {
         type: Number
