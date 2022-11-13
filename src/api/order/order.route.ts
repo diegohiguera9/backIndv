@@ -18,15 +18,15 @@ import { ipPrinterResume } from "../../utils/printResume";
 
 const router = Router();
 
-router.route("/create").post(isAuthenticated, createOrder);
+router.route("/create").post(isAuthenticated, createOrder, );
 router.route("/byday").post(isAuthenticated, orderDay);
 router.route("/showOne/:id").get(isAuthenticated, showOrder);
 router.route("/update/:id").put(isAuthenticated, updateOrder, );
-router.route("/upDelete/:id").put(isAuthenticated, upDeleteOrder);
+router.route("/upDelete/:id").put(isAuthenticated, upDeleteOrder, );
 router.route("/showStatus").get(isAuthenticated, showStatus);
 router.route("/updateStatus/:id").put(isAuthenticated, updatePay);
 router.route("/report").post(isAuthenticated, orderReport);
-router.route("/printResume/:id").get(isAuthenticated, printResume);
+router.route("/printResume/:id").get(isAuthenticated, printResume,);
 router.route('/orderMap').post(isAuthenticated, orderMap)
 
 export default router;

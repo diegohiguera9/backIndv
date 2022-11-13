@@ -110,6 +110,7 @@ export async function upDeleteOrder(
     const orderId = req.params.id;
     const data = req.body.data;
     const order = await Order.findById(orderId);
+    let inValid = false
 
     if (!order) {
       return next(new ErrroResponse("no order found", 400));
@@ -121,6 +122,13 @@ export async function upDeleteOrder(
 
     const orderNames = order.products.map((item) => item.name);
     const inNames = data.map((item: oderProducts) => item.name);
+
+    inNames.forEach((item:string)=>{
+      const searchIndex = orderNames.indexOf(item)
+      if (searchIndex === -1) inValid = true
+    })
+
+    if(inValid) return next(new ErrroResponse('Algun producto no se encuentra en la orden',400))
 
     data.forEach((inProduct: oderProducts, dataIndex: number) => {
       const orderIndex = orderNames.indexOf(inNames[dataIndex]);
