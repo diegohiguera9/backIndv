@@ -50,7 +50,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
       enum: {
-        values: ["admin", "basic", "cashier"],
+        values: ["admin", "basic", "cashier", 'waiter'],
         message: "Invalid rol",
       },
     },
